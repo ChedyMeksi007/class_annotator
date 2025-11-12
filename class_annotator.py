@@ -49,7 +49,6 @@ class ImageAnnotator(QWidget):
         self.load_folder()
         if self.image_files:
             self.show_image()
-  # Custom save path
 
     def init_classes(self):
         text, ok = QInputDialog.getText(self, "Input Classes", "Enter initial class names separated by commas:")
@@ -133,17 +132,22 @@ class ImageAnnotator(QWidget):
         folder = QFileDialog.getExistingDirectory(self, "Select Image Folder")
         if folder:
             self.image_folder = folder
+            print('image folder')
+            print(self.image_folder)
             self.image_files = [f for f in os.listdir(folder)
-                                if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+                                if f.lower().endswith(('.png', '.jpg', '.jpeg','.tiff','.tif'))]
+            print(self.image_files)
             self.image_files.sort()
+            print('sorted')
 
     def show_image(self):
         if not self.image_files:
             return
         path = os.path.join(self.image_folder, self.image_files[self.index])
         self.scene.clear()
-
+        print('read')
         pil_img = Image.open(path)
+        print('read')
         data = pil_img.convert("RGBA").tobytes("raw", "RGBA")
         qimg = QImage(data, pil_img.width, pil_img.height, QImage.Format_RGBA8888)
         pixmap = QPixmap.fromImage(qimg)
